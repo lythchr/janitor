@@ -1,4 +1,4 @@
-import boto3
+import boto3       
 import datetime
 import json
 from botocore.client import ClientError
@@ -25,12 +25,9 @@ def handler(event, context):
         RunningInstances.append(instance.id)
     
     instanceList = json.dumps(RunningInstances)
-    ec2.stop_instances(
-        InstanceIds=RunningInstances,
-        Hibernate=True,
-        DryRun=False,
-        Force=True
-    )
+    
+    ec2.instances.filter(InstanceIds=RunningInstances).stop()
+
     data = {
         'output': 'Stopped instances',
         'timestamp': datetime.datetime.utcnow().isoformat(),
